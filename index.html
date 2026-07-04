@@ -24,14 +24,14 @@
         .a4-page {
             width: 210mm;
             height: 297mm; /* Standard A4 height */
-            padding: 16mm 16mm; /* Balanced premium margins to fill the page beautifully */
+            padding: 15mm 15mm; /* Balanced premium borders for luxury display */
             background: white;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             margin: auto;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Guarantees signature is pushed perfectly to bottom */
+            justify-content: space-between; /* Strictly guarantees signature is pushed perfectly to bottom */
             box-sizing: border-box;
             /* Uniform Times New Roman for the printable corporate document */
             font-family: 'Times New Roman', Times, serif !important;
@@ -85,7 +85,7 @@
             }
             @page {
                 size: A4 portrait;
-                margin: 12mm 15mm 12mm 15mm; /* Safe mechanical printing zone borders to prevent overflow */
+                margin: 15mm 15mm 15mm 15mm; /* Safe mechanical printing zone borders */
             }
             /* Hide the editable borders and background highlights when printing */
             [contenteditable="true"] {
@@ -107,7 +107,7 @@
     <!-- Top Navigation Header (no-print) -->
     <header class="bg-slate-900 text-white p-4 shadow-md no-print flex justify-between items-center z-10">
         <div class="flex items-center gap-3">
-            <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-10 w-auto object-contain" alt="Kiến Thợ Logo" />
+            <img src="LOGO.png" class="h-10 w-auto object-contain" onerror="this.src='LOGO-NO.png';" />
             <div>
                 <h1 class="text-md font-black tracking-wider text-orange-500 uppercase">DỊCH VỤ CÔNG NGHỆ KIẾN THỢ</h1>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest">Trình tạo báo giá nhanh dã ngoại</p>
@@ -267,8 +267,11 @@
                     <!-- Corporate Letterhead -->
                     <div class="flex justify-between items-start border-b-4 border-slate-900 pb-2 mb-1">
                         <div class="flex items-center gap-4">
-                            <!-- Corrected Brand Logo using verified direct image URL -->
-                            <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-16 w-auto object-contain max-w-[140px]" alt="Kiến Thợ Logo" />
+                            <!-- Premium Embedded Brand Logo using provided uploaded assets -->
+                            <img src="LOGO.png" class="h-16 w-auto object-contain max-w-[140px]" onerror="this.src='LOGO-NO.png'; this.onerror=function(){this.style.display='none'; document.getElementById('logoPreviewFallback').style.display='block';};" />
+                            <div id="logoPreviewFallback" style="display:none;" class="bg-slate-900 text-orange-500 p-2 rounded-lg text-xl font-black tracking-wider">
+                                K-TECH
+                            </div>
                             <div>
                                 <h2 contenteditable="true" class="text-[14px] font-black tracking-wider text-slate-900 uppercase leading-none">Dịch vụ công nghệ kiến thợ</h2>
                                 <p contenteditable="true" class="text-[10px] text-slate-500 uppercase tracking-widest font-extrabold mt-1">Dịch vụ dò và vẽ hệ thống điện âm tường</p>
@@ -287,11 +290,11 @@
 
                     <!-- Subtitle and Greeting -->
                     <div class="text-center py-1">
-                        <h3 contenteditable="true" class="text-[16px] font-extrabold text-slate-900 tracking-wide uppercase">BẢNG BÁO GIÁ DỊCH VỤ DÒ TÌM ĐIỆN ÂM TƯỜNG</h3>
+                        <h3 contenteditable="true" class="text-[15px] font-extrabold text-slate-900 tracking-wide uppercase">BẢNG BÁO GIÁ DỊCH VỤ DÒ TÌM ĐIỆN AM TƯỜNG</h3>
                     </div>
 
                     <!-- Client Info Segment -->
-                    <div class="bg-slate-50 py-3 px-4 rounded-lg border border-slate-200 text-[13px] space-y-1">
+                    <div class="bg-slate-50 py-3 px-4 rounded-lg border border-slate-200 text-[12px] space-y-1">
                         <div class="grid grid-cols-12 gap-1">
                             <span class="col-span-3 text-slate-500 font-bold">Kính gửi Quý khách:</span>
                             <span contenteditable="true" class="col-span-9 font-black text-slate-900" id="lblClientName">Anh Phú - Thầu Cải Tạo Tân Phú</span>
@@ -304,9 +307,9 @@
 
                     <!-- Main Quotation Grid -->
                     <div>
-                        <table class="w-full text-left text-[12.5px] border-collapse">
+                        <table class="w-full text-left text-[12px] border-collapse">
                             <thead>
-                                <tr class="border-b-2 border-slate-950 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
+                                <tr class="border-b-2 border-slate-950 text-slate-500 font-bold uppercase text-[10.5px] tracking-wider">
                                     <th class="py-2 pb-2">Hạng mục khảo sát tầm soát</th>
                                     <th class="py-2 pb-2">Diện tích / Công nghệ</th>
                                     <th class="py-2 pb-2 text-right">Đơn giá (đ)</th>
@@ -317,7 +320,7 @@
                             <tbody id="quotationTableBody" class="divide-y divide-slate-150 text-slate-700">
                                 <!-- Row 1: Base Floor pricing -->
                                 <tr>
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-normal max-w-sm">
                                         Dò quét định vị mạch điện ngầm, dây điện âm tường và dán băng keo đánh dấu trực tiếp tại hiện trường.
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableArea">Từ 50 m² – dưới 80 m²</td>
@@ -327,7 +330,7 @@
                                 </tr>
                                 <!-- Row 2: Dynamic Extra floors calculation -->
                                 <tr id="extraFloorsRow" class="hidden">
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-normal max-w-sm">
                                         Phí dịch vụ rà quét cộng thêm cho các tầng phụ (Tầng lầu/tầng lửng).
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableExtraFloors">Thêm 1 tầng</td>
@@ -341,7 +344,7 @@
 
                     <!-- Financial Calculation Summary block -->
                     <div class="pt-1 flex flex-col items-end">
-                        <div class="w-68 space-y-1.5 text-[11.5px] border-t border-slate-200 pt-2">
+                        <div class="w-64 space-y-1 text-[11px] border-t border-slate-200 pt-2">
                             <div class="flex justify-between text-slate-500 font-bold">
                                 <span>Phí dịch vụ:</span>
                                 <span contenteditable="true" id="lblSumSub" class="text-slate-900">1.600.000 đ</span>
@@ -350,24 +353,24 @@
                                 <span>Chiết khấu đối tác:</span>
                                 <span contenteditable="true" class="text-green-600" id="lblSumDiscount">-0 đ</span>
                             </div>
-                            <div class="flex justify-between border-t border-slate-950 pt-2 font-black text-[12.5px] bg-slate-50 p-2 rounded">
+                            <div class="flex justify-between border-t border-slate-950 pt-1.5 font-black text-[12px] bg-slate-50 p-2 rounded">
                                 <span>TỔNG THANH TOÁN:</span>
-                                <span contenteditable="true" class="text-orange-600 font-black text-[13.5px]" id="lblSumTotal">1.600.000 đ</span>
+                                <span contenteditable="true" class="text-orange-600 font-black text-[13px]" id="lblSumTotal">1.600.000 đ</span>
                             </div>
                         </div>
                         
                         <!-- Tagline: KHÔNG PHÁT HIỆN ĐƯỢC – KHÔNG THU PHÍ -->
-                        <div contenteditable="true" class="w-full text-center font-extrabold text-orange-600 border-t border-b border-dashed border-orange-200 py-2.5 mt-2 text-[12.5px] italic">
+                        <div contenteditable="true" class="w-full text-center font-extrabold text-orange-600 border-t border-b border-dashed border-orange-200 py-2 mt-2 text-[12px] italic">
                             "KHÔNG PHÁT HIỆN ĐƯỢC – KHÔNG THU PHÍ (An tâm tuyệt đối)"
                         </div>
                     </div>
 
                     <!-- Section I: Deliverables -->
-                    <div class="space-y-1.5">
-                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[12px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
+                    <div class="space-y-1">
+                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[11.5px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
                             <span class="text-orange-500">I.</span> SẢN PHẨM KHÁCH HÀNG NHẬN ĐƯỢC (DELIVERABLES)
                         </h4>
-                        <ul class="text-[11.5px] text-slate-600 space-y-2 leading-relaxed pl-1">
+                        <ul class="text-[11px] text-slate-600 space-y-1.5 leading-relaxed pl-1">
                             <li class="flex items-start gap-1">
                                 <span class="text-orange-500 font-bold">•</span>
                                 <span contenteditable="true"><strong>Đánh dấu trực quan tại hiện trường:</strong> Định vị đường đi của dây điện bằng băng keo giấy chuyên dụng dán trực tiếp lên tường (Cam kết không vẽ trực tiếp lên tường sơn, không làm bẩn, lem nhem nhà khách).</span>
@@ -384,21 +387,21 @@
                     </div>
 
                     <!-- Section II: B2B Benefits (Hidden dynamically for B2C) -->
-                    <div id="previewB2BSection" class="space-y-1.5">
-                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[12px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
+                    <div id="previewB2BSection" class="space-y-1">
+                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[11.5px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
                             <span class="text-orange-500">II.</span> CHÍNH SÁCH ƯU ĐÃI DÀNH CHO ĐỐI TÁC (B2B)
                         </h4>
-                        <p contenteditable="true" class="text-[11.5px] text-slate-600 leading-relaxed italic pl-3 border-l-2 border-orange-500">
+                        <p contenteditable="true" class="text-[11px] text-slate-600 leading-relaxed italic pl-3 border-l-2 border-orange-500">
                             Dành riêng cho Chủ xưởng nội thất, Kiến trúc sư, Thầu xây dựng ký hợp đồng hợp tác dài hạn: Chiết khấu ngay 10% - 15% từ công trình thứ 2 trở đi hoặc áp dụng gói Thuê bao tháng (Retainer) để tối ưu chi phí xuống mức thấp nhất cho xưởng. Ưu tiên xếp lịch khảo sát khẩn cấp trước 24h để kịp tiến độ bàn giao công trình.
                         </p>
                     </div>
 
                     <!-- Section III: Terms -->
-                    <div class="space-y-1.5">
-                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[12px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
+                    <div class="space-y-1">
+                        <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[11.5px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
                             <span class="text-orange-500" id="lblTermsSectionNum">III.</span> ĐIỀU KHOẢN VÀ CAM KẾT ÁP DỤNG
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px] text-slate-500 leading-relaxed pl-1">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-[10.5px] text-slate-500 leading-normal pl-1">
                             <p contenteditable="true">• <strong>Phạm vi dịch vụ:</strong> Bảng giá trên chỉ áp dụng cho rà quét dây điện đi trên vách tường đứng; không bao gồm các hạng mục dò quét ngầm dưới sàn nhà (nền), hệ trần bê tông hoặc dầm cầu thang.</p>
                             <p contenteditable="true">• <strong>Cam kết an toàn:</strong> Hoàn tiền 100% chi phí dịch vụ nếu kết quả rà quét không chính xác dẫn đến sự cố va chạm hệ thống ngầm (trong phạm vi vùng đã quét và đánh dấu).</p>
                             <p contenteditable="true">• <strong>Thời gian đặt lịch:</strong> Quý khách vui lòng liên hệ đặt lịch trước ít nhất 01 ngày để chúng tôi sắp xếp kỹ sư và thiết bị phục vụ chu đáo nhất.</p>
@@ -407,17 +410,17 @@
                     </div>
                 </div>
 
-                <!-- Footer Signatures (Set to h-32 [128px] with proper layout safeguards for full A4 filling) -->
-                <div class="grid grid-cols-2 text-center text-[12px] mt-4 pt-4 border-t border-slate-200">
-                    <div class="flex flex-col justify-between h-32">
-                        <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[12px]">ĐẠI DIỆN KHÁCH HÀNG</p>
+                <!-- Footer Signatures (Set to h-28 [112px] with proper layout safeguards) -->
+                <div class="grid grid-cols-2 text-center text-[11.5px] mt-4 pt-4 border-t border-slate-200">
+                    <div class="flex flex-col justify-between h-28">
+                        <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[11.5px]">ĐẠI DIỆN KHÁCH HÀNG</p>
                         <div class="flex-1"></div>
-                        <p contenteditable="true" class="text-slate-600 italic text-[10.5px] font-extrabold tracking-wide">(Ký, ghi rõ họ tên)</p>
+                        <p contenteditable="true" class="text-slate-600 italic text-[10px] font-extrabold tracking-wide">(Ký, ghi rõ họ tên)</p>
                     </div>
-                    <div class="flex flex-col justify-between h-32">
-                        <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[12px]">ĐẠI DIỆN KIẾN THỢ TECH</p>
+                    <div class="flex flex-col justify-between h-28">
+                        <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[11.5px]">ĐẠI DIỆN KIẾN THỢ TECH</p>
                         <div class="flex-1"></div>
-                        <p contenteditable="true" class="text-slate-600 italic text-[10.5px] font-extrabold tracking-wide">(Ký, ghi rõ họ tên)</p>
+                        <p contenteditable="true" class="text-slate-600 italic text-[10px] font-extrabold tracking-wide">(Ký, ghi rõ họ tên)</p>
                     </div>
                 </div>
 
@@ -652,7 +655,7 @@
                         body {
                             font-family: 'Times New Roman', Times, serif !important;
                             font-size: 11pt;
-                            line-height: 1.45;
+                            line-height: 1.4;
                             color: #1e293b;
                         }
                         p, li, td, th, span {
@@ -699,11 +702,11 @@
                 </head>
                 <body>
                     <div class="Section1">
-                        <!-- Fully restored Header using actual working logo image link -->
+                        <!-- Fully restored Header using actual LOGO.png image requested by user -->
                         <table class="header-table" style="width: 100%; margin-bottom: 15px;">
                             <tr>
                                 <td style="width: 110pt; padding: 0px; vertical-align: middle;">
-                                    <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" width="130" height="auto" style="display: block; max-width: 140px; height: auto;" />
+                                    <img src="LOGO.png" width="130" height="auto" style="display: block; max-width: 140px; height: auto;" />
                                 </td>
                                 <td style="padding-left: 12pt; vertical-align: middle;">
                                     <p style="margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; color: #1e293b; text-transform: uppercase; line-height: 1.1;">DỊCH VỤ CÔNG NGHỆ KIẾN THỢ</p>
@@ -747,7 +750,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="font-weight: bold; color: #0f172a; font-family: 'Times New Roman', Times, serif; line-height: 1.45;">Dò quét định vị mạch điện ngầm, dây điện âm tường và dán băng keo đánh dấu trực tiếp tại hiện trường.</td>
+                                    <td style="font-weight: bold; color: #0f172a; font-family: 'Times New Roman', Times, serif; line-height: 1.4;">Dò quét định vị mạch điện ngầm, dây điện âm tường và dán băng keo đánh dấu trực tiếp tại hiện trường.</td>
                                     <td style="font-family: 'Times New Roman', Times, serif;">${areaLabel}</td>
                                     <td style="text-align: right; font-family: 'Times New Roman', Times, serif;">${basePrice}</td>
                                     <td style="text-align: right; font-family: 'Times New Roman', Times, serif;">${transportFee}</td>
@@ -809,27 +812,27 @@
                         </p>
                         <table class="header-table" style="width: 100%; margin-top: 6px; margin-bottom: 15px;">
                             <tr>
-                                <td style="width: 50%; padding-right: 20px; font-family: 'Times New Roman', Times, serif; font-size: 9pt; color: #475569; vertical-align: top; line-height: 1.45;">
+                                <td style="width: 50%; padding-right: 20px; font-family: 'Times New Roman', Times, serif; font-size: 9pt; color: #475569; vertical-align: top; line-height: 1.4;">
                                     <p style="margin: 0 0 6px 0;">• <b>Phạm vi dịch vụ:</b> Bảng giá trên chỉ áp dụng cho rà quét dây điện đi trên vách tường đứng; không bao gồm các hạng mục dò quét ngầm dưới sàn nhà (nền), hệ trần bê tông hoặc khu vực dầm cầu thang.</p>
                                     <p style="margin: 0;">• <b>Cam kết an toàn:</b> Hoàn tiền 100% chi phí dịch vụ nếu kết quả rà quét không chính xác dẫn đến sự cố va chạm hệ thống ngầm (trong phạm vi vùng đã quét và đánh dấu).</p>
                                 </td>
-                                <td style="width: 50%; font-family: 'Times New Roman', Times, serif; font-size: 9pt; color: #475569; vertical-align: top; line-height: 1.45;">
+                                <td style="width: 50%; font-family: 'Times New Roman', Times, serif; font-size: 9pt; color: #475569; vertical-align: top; line-height: 1.4;">
                                     <p style="margin: 0 0 6px 0;">• <b>Thời gian đặt lịch:</b> Quý khách vui lòng liên hệ đặt lịch trước ít nhất 01 ngày để chúng tôi sắp xếp kỹ sư và thiết bị phục vụ chu đáo nhất.</p>
                                     <p style="margin: 0;">• <b>Hóa đơn tài chính:</b> Giá trên là giá NET thanh toán tiền mặt/chuyển khoản cá nhân trực tiếp và không phát sinh thêm các khoản thuế GTGT.</p>
                                 </td>
                             </tr>
                         </table>
 
-                        <!-- Double columns signature zones matching spacing standard of h-32 on Word -->
+                        <!-- Double columns signature zones matching spacing standard of h-28 on Word -->
                         <table style="width: 100%; margin-top: 25px; border: none !important;">
                             <tr style="border: none !important;">
                                 <td align="center" style="width: 50%; border: none !important; text-align: center; padding: 0; font-family: 'Times New Roman', Times, serif;">
-                                    <p style="margin: 0 0 95px 0; font-weight: bold; font-size: 11.5pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">ĐẠI DIỆN KHÁCH HÀNG</p>
-                                    <p style="margin: 0; font-style: italic; font-weight: bold; font-size: 10pt; color: #475569;">(Ký, ghi rõ họ tên)</p>
+                                    <p style="margin: 0 0 85px 0; font-weight: bold; font-size: 11pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">ĐẠI DIỆN KHÁCH HÀNG</p>
+                                    <p style="margin: 0; font-style: italic; font-weight: bold; font-size: 9.5pt; color: #475569;">(Ký, ghi rõ họ tên)</p>
                                 </td>
                                 <td align="center" style="width: 50%; border: none !important; text-align: center; padding: 0; font-family: 'Times New Roman', Times, serif;">
-                                    <p style="margin: 0 0 95px 0; font-weight: bold; font-size: 11.5pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">ĐẠI DIỆN KIẾN THỢ TECH</p>
-                                    <p style="margin: 0; font-style: italic; font-weight: bold; font-size: 10pt; color: #475569;">(Ký, ghi rõ họ tên)</p>
+                                    <p style="margin: 0 0 85px 0; font-weight: bold; font-size: 11pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">ĐẠI DIỆN KIẾN THỢ TECH</p>
+                                    <p style="margin: 0; font-style: italic; font-weight: bold; font-size: 9.5pt; color: #475569;">(Ký, ghi rõ họ tên)</p>
                                 </td>
                             </tr>
                         </table>
