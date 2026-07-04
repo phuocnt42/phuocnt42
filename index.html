@@ -1,13 +1,5 @@
 <!-- Chosen Palette: Slate (#1e293b) for premium technical corporate branding, combined with Vibrant Orange (#f97316) for modern energetic accents. Background is pristine white for high-fidelity PDF printing. -->
-<!-- Application Structure Plan:
-     A professional single-file corporate quotation generator.
-     1. Layout: Fluid width on screen (fully responsive for Power Apps & mobile screens), strict standard dimension on print.
-     2. Configurator panel (no-print): Controls for Client Info, Date, Customer Mode (B2B vs B2C), Area range selection, Extra floors, Extra floor price option (Fixed vs 1/2 Base), B2B partner discount toggle (10% or 15%), and Geographical surcharge.
-     3. Printable Paper area (print-area): Formatted fluidly for responsive screen view and strict 210mm x 297mm on A4 print.
-     4. CSS print optimization: Uses `@media print` to hide configuration inputs, change body backgrounds to pure white, and expand the preview card to full screen with exact color preservation. Force fits precisely onto 1 sheet of A4.
-     5. Word Online Experience: Every single paragraph, header, list item, and block is editable directly on click with contenteditable. Hover cues are styled dynamically.
-     6. Client-side Word Export: Generates a beautifully formatted Word Document (.docx) strictly using Times New Roman, vertical A4 configuration, and robust table layout with pure CSS logo fallbacks.
--->
+<!-- Power Apps Optimization: Added a tab-switcher (Config Mode vs Full-width Preview Mode) to ensure the document expands to 100% of the Power Apps HTML container with zero squeezed columns. -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -19,24 +11,28 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f1f5f9;
         }
         
-        /* POWER APPS FLUID RESPONSIVE STYLE:
-           Make the page container take 100% width of Power Apps screen on web display,
-           and only apply strict A4 sizes during printing. */
+        /* POWER APPS FULL-WIDTH PREVIEW: 
+           The page stretches to 100% of the Power Apps width with zero margins for maximum readability. */
         .a4-page {
-            width: 100%; /* Fully stretch to fill Power Apps width */
-            max-width: 800px; /* Clean desktop viewing threshold */
-            min-height: 1050px; /* Standard proportional height on screen */
+            width: 100% !important;
+            max-width: 100% !important;
+            min-height: 1120px;
             height: auto;
-            padding: 5% 5%; /* Fluid relative padding */
+            padding: 6% 6%; /* Dynamic relative padding to look pristine on any screen size */
             background: white;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            margin: auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin: 0 auto;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Keeps signature at the absolute bottom */
+            justify-content: space-between;
             box-sizing: border-box;
             font-family: 'Times New Roman', Times, serif !important;
         }
@@ -60,10 +56,6 @@
         }
 
         @media print {
-            html, body {
-                height: 100%;
-                overflow: hidden;
-            }
             .no-print {
                 display: none !important;
             }
@@ -90,16 +82,14 @@
             }
             @page {
                 size: A4 portrait;
-                margin: 0; /* Direct margin control in container to prevent page spill */
+                margin: 0;
             }
-            /* Hide the editable borders and highlights when printing */
             [contenteditable="true"] {
                 background-color: transparent !important;
                 box-shadow: none !important;
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            /* Preserve background colors in print */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -107,166 +97,179 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+<body class="text-slate-800 min-h-screen flex flex-col">
 
-    <!-- Top Navigation Header (no-print) -->
-    <header class="bg-slate-900 text-white p-4 shadow-md no-print flex justify-between items-center z-10 flex-wrap gap-2">
-        <div class="flex items-center gap-3">
-            <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-10 w-auto object-contain" alt="Kiến Thợ Logo" />
-            <div>
-                <h1 class="text-md font-black tracking-wider text-orange-500 uppercase">DỊCH VỤ CÔNG NGHỆ KIẾN THỢ</h1>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Trình tạo báo giá nhanh dã ngoại</p>
+    <!-- Header & Navigation Tabs (No-Print) -->
+    <header class="bg-slate-900 text-white shadow-md no-print sticky top-0 z-50">
+        <!-- Top bar with brand logo & print actions -->
+        <div class="p-3 md:p-4 flex justify-between items-center flex-wrap gap-2 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-8 md:h-10 w-auto object-contain" alt="Kiến Thợ Logo" />
+                <div>
+                    <h1 class="text-xs md:text-sm font-black tracking-wider text-orange-500 uppercase">DỊCH VỤ CÔNG NGHỆ KIẾN THỢ</h1>
+                    <p class="text-[9px] text-slate-400 uppercase tracking-widest hidden sm:block">Trình tạo báo giá Power Apps</p>
+                </div>
+            </div>
+            <div class="flex gap-1.5 md:gap-2">
+                <!-- Word Download -->
+                <button onclick="exportToWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] transition-colors flex items-center gap-1.5 shadow">
+                    <span>📝</span> <span class="hidden xs:inline">Tải File Word</span>
+                </button>
+                <!-- PDF Print -->
+                <button onclick="window.print()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] transition-colors flex items-center gap-1.5 shadow">
+                    <span>🖨️</span> <span class="hidden xs:inline">In / Xuất PDF</span>
+                </button>
             </div>
         </div>
-        <div class="flex gap-2">
-            <!-- Word Download Button -->
-            <button onclick="exportToWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl text-xs transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20">
-                <span>📝</span> Tải File Word (.docx)
+
+        <!-- Power Apps Layout Tabs (Switch between Input Form and Full-width Document) -->
+        <div class="bg-slate-800 p-1 flex border-b border-slate-700">
+            <button id="tabBtnConfig" onclick="switchTab('config')" class="flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-white bg-slate-700 shadow-sm border border-slate-600">
+                ⚙️ 1. NHẬP THÔNG TIN & GIÁ
             </button>
-            <button onclick="window.print()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-xl text-xs transition-colors flex items-center gap-2 shadow-lg shadow-orange-500/20">
-                <span>🖨️</span> Xuất PDF / In Báo Giá
+            <button id="tabBtnPreview" onclick="switchTab('preview')" class="flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-slate-400 hover:text-white hover:bg-slate-700">
+                📄 2. XEM BÁO GIÁ (TOÀN MÀN HÌNH)
             </button>
         </div>
     </header>
 
     <!-- Main Workspace -->
-    <div class="flex-1 flex flex-col lg:flex-row">
+    <div class="flex-1 flex flex-col">
         
-        <!-- Left Column: Settings Panel (no-print) -->
-        <aside class="w-full lg:w-96 bg-white border-r border-slate-200 p-6 no-print space-y-6 shrink-0 lg:overflow-y-auto lg:max-h-[calc(100vh-72px)]">
-            <div class="border-b border-slate-100 pb-3">
-                <h3 class="font-black text-slate-900 text-sm uppercase flex items-center gap-2">
-                    <span>📝</span> Thông tin khách hàng
-                </h3>
-            </div>
-
-            <!-- Client metadata inputs -->
-            <div class="space-y-4 text-xs font-semibold text-slate-700">
-                <div>
-                    <label class="block text-slate-500 mb-1">Mã Số Báo Giá (Số lưu trữ):</label>
-                    <input type="text" id="qtNumber" value="KTT-2026-0701" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500" oninput="updatePreview()">
+        <!-- Tab 1: Settings Panel (Active by default, hides preview to give room) -->
+        <div id="panelConfig" class="p-4 md:p-6 max-w-2xl mx-auto w-full space-y-5 no-print">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h3 class="font-black text-slate-900 text-sm uppercase flex items-center gap-2 text-orange-600">
+                        <span>📝</span> Thông tin khách hàng
+                    </h3>
                 </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Tên Khách Hàng / Đơn Vị:</label>
-                    <input type="text" id="clientName" value="Anh Phú - Thầu Cải Tạo Tân Phú" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500" oninput="updatePreview()">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Địa Chỉ Công Trình:</label>
-                    <input type="text" id="clientAddr" value="158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500" oninput="updatePreview()">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Ngày Lập Báo Giá:</label>
-                    <input type="date" id="qtDate" value="2026-07-01" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500" onchange="updatePreview()">
+                <!-- Client metadata inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-slate-700">
+                    <div>
+                        <label class="block text-slate-500 mb-1">Mã Số Báo Giá:</label>
+                        <input type="text" id="qtNumber" value="KTT-2026-0701" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" oninput="updatePreview()">
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 mb-1">Ngày Lập Báo Giá:</label>
+                        <input type="date" id="qtDate" value="2026-07-01" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" onchange="updatePreview()">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-slate-500 mb-1">Tên Khách Hàng / Đơn Vị:</label>
+                        <input type="text" id="clientName" value="Anh Phú - Thầu Cải Tạo Tân Phú" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" oninput="updatePreview()">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-slate-500 mb-1">Địa Chỉ Công Trình:</label>
+                        <input type="text" id="clientAddr" value="158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" oninput="updatePreview()">
+                    </div>
                 </div>
             </div>
 
             <!-- Pricing Configuration -->
-            <div class="border-b border-slate-100 pb-3 pt-4">
-                <h3 class="font-black text-slate-900 text-sm uppercase flex items-center gap-2">
-                    <span>💵</span> Cấu Hình Bảng Giá
-                </h3>
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h3 class="font-black text-slate-900 text-sm uppercase flex items-center gap-2 text-orange-600">
+                        <span>💵</span> Cấu Hình Hạng Mục & Đơn Giá
+                    </h3>
+                </div>
+
+                <div class="space-y-4 text-xs font-semibold text-slate-700">
+                    <!-- Mode Option B2B / B2C -->
+                    <div>
+                        <label class="block text-slate-500 mb-1.5">Phân Loại Khách Hàng:</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="btnModeB2C" onclick="setMode('B2C')" class="px-3 py-2.5 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm">Khách lẻ (B2C)</button>
+                            <button type="button" id="btnModeB2B" onclick="setMode('B2B')" class="px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200">Đối tác (B2B)</button>
+                        </div>
+                    </div>
+
+                    <!-- Area tier selector -->
+                    <div>
+                        <label class="block text-slate-500 mb-1.5">Diện Tích Quét Sàn / Vách:</label>
+                        <select id="areaTier" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900 text-xs" onchange="updatePreview()">
+                            <option value="500000" data-label="Dưới 20 m²">Dưới 20 m² (500.000 đ)</option>
+                            <option value="800000" data-label="Từ 20 m² – dưới 30 m²">Từ 20 m² – dưới 30 m² (800.000 đ)</option>
+                            <option value="1200000" data-label="Từ 30 m² – dưới 50 m²">Từ 30 m² – dưới 50 m² (1.200.000 đ)</option>
+                            <option value="1600000" data-label="Từ 50 m² – dưới 80 m²" selected>Từ 50 m² – dưới 80 m² (1.600.000 đ)</option>
+                            <option value="2200000" data-label="Từ 80 m² – dưới 120 m²">Từ 80 m² – dưới 120 m² (2.200.000 đ)</option>
+                            <option value="custom" data-label="Trên 120 m²">Trên 120 m² (Khảo sát báo giá riêng)</option>
+                        </select>
+                    </div>
+
+                    <!-- Extra floors selector -->
+                    <div>
+                        <label class="block text-slate-500 mb-1.5">Số Tầng Thêm (Không tính tầng đầu):</label>
+                        <select id="extraFloors" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900 text-xs" onchange="updatePreview()">
+                            <option value="0" selected>Chỉ quét 1 tầng (Không thêm tầng)</option>
+                            <option value="1">Thêm 1 tầng phụ</option>
+                            <option value="2">Thêm 2 tầng phụ</option>
+                            <option value="3">Thêm 3 tầng phụ</option>
+                            <option value="4">Thêm 4 tầng phụ</option>
+                        </select>
+                    </div>
+
+                    <!-- Option for Extra floor pricing rule -->
+                    <div>
+                        <label class="block text-slate-500 mb-1.5">Đơn Giá Tầng Phụ (Tính theo):</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="btnExtraFloorFixed" onclick="setExtraFloorPricing('fixed')" class="px-3 py-2.5 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm">Giá cố định</button>
+                            <button type="button" id="btnExtraFloorHalf" onclick="setExtraFloorPricing('half')" class="px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200">1/2 giá gốc</button>
+                        </div>
+                    </div>
+
+                    <!-- Custom Price input -->
+                    <div id="customPriceContainer" class="hidden">
+                        <label class="block text-slate-500 mb-1">Đơn Giá Thỏa Thuận Riêng (đ):</label>
+                        <input type="number" id="customPriceVal" value="3500000" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" oninput="updatePreview()">
+                    </div>
+
+                    <!-- Partner discounts toggle (B2B) -->
+                    <div id="discountConfigContainer" class="hidden bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        <label class="block text-slate-700 font-bold mb-2">Chính Sách Đối Tác (B2B):</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 font-medium text-slate-600">
+                                <input type="radio" name="discountOption" value="0" checked class="accent-orange-500" onchange="updatePreview()">
+                                <span>Không chiết khấu</span>
+                            </label>
+                            <label class="flex items-center gap-2 font-medium text-slate-600">
+                                <input type="radio" name="discountOption" value="10" class="accent-orange-500" onchange="updatePreview()">
+                                <span>Giảm 10% (Đối tác Thân thiết)</span>
+                            </label>
+                            <label class="flex items-center gap-2 font-medium text-slate-600">
+                                <input type="radio" name="discountOption" value="15" class="accent-orange-500" onchange="updatePreview()">
+                                <span>Giảm 15% (Đối tác Chiến lược)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Geography surcharges -->
+                    <div>
+                        <label class="block text-slate-500 mb-1.5">Phạm Vi Địa Lý / Phí Di Chuyển:</label>
+                        <select id="transportFee" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900 text-xs" onchange="updatePreview()">
+                            <option value="0">Nội thành TP.HCM (Miễn phí)</option>
+                            <option value="150000">Ngoại thành TP.HCM (+150.000 đ)</option>
+                            <option value="300000">Tỉnh lân cận (+300.000 đ)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-4 text-xs font-semibold text-slate-700">
-                <!-- Mode Option B2B / B2C -->
-                <div>
-                    <label class="block text-slate-500 mb-2">Phân Loại Khách Hàng:</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" id="btnModeB2C" onclick="setMode('B2C')" class="px-3 py-2 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm">Khách lẻ (B2C)</button>
-                        <button type="button" id="btnModeB2B" onclick="setMode('B2B')" class="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200">Đối tác (B2B)</button>
-                    </div>
-                </div>
+            <!-- Action Button inside configuration tab to view results -->
+            <button onclick="switchTab('preview')" class="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-sm transition-all shadow-md flex justify-center items-center gap-2">
+                <span>📄</span> Xem Báo Giá Tràn Viền ➜
+            </button>
+        </div>
 
-                <!-- Area tier selector -->
-                <div>
-                    <label class="block text-slate-500 mb-2">Diện Tích Quét Sàn / Vách:</label>
-                    <select id="areaTier" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900" onchange="updatePreview()">
-                        <option value="500000" data-label="Dưới 20 m²">Dưới 20 m² (500.000 đ)</option>
-                        <option value="800000" data-label="Từ 20 m² – dưới 30 m²">Từ 20 m² – dưới 30 m² (800.000 đ)</option>
-                        <option value="1200000" data-label="Từ 30 m² – dưới 50 m²">Từ 30 m² – dưới 50 m² (1.200.000 đ)</option>
-                        <option value="1600000" data-label="Từ 50 m² – dưới 80 m²" selected>Từ 50 m² – dưới 80 m² (1.600.000 đ)</option>
-                        <option value="2200000" data-label="Từ 80 m² – dưới 120 m²">Từ 80 m² – dưới 120 m² (2.200.000 đ)</option>
-                        <option value="custom" data-label="Trên 120 m²">Trên 120 m² (Khảo sát báo giá riêng)</option>
-                    </select>
-                </div>
-
-                <!-- Extra floors selector -->
-                <div>
-                    <label class="block text-slate-500 mb-2">Số Tầng Thêm (Không tính trệt/tầng đầu):</label>
-                    <select id="extraFloors" class="w-full p-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900" onchange="updatePreview()">
-                        <option value="0" selected>Chỉ quét 1 tầng (Không thêm tầng)</option>
-                        <option value="1">Thêm 1 tầng phụ</option>
-                        <option value="2">Thêm 2 tầng phụ</option>
-                        <option value="3">Thêm 3 tầng phụ</option>
-                        <option value="4">Thêm 4 tầng phụ</option>
-                    </select>
-                </div>
-
-                <!-- Option for Extra floor pricing rule -->
-                <div>
-                    <label class="block text-slate-500 mb-2">Đơn Giá Tầng Phụ (Tính theo):</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" id="btnExtraFloorFixed" onclick="setExtraFloorPricing('fixed')" class="px-3 py-2 bg-orange-500 text-white rounded-lg text-[10px] font-bold transition-all shadow-sm">Giá cố định</button>
-                        <button type="button" id="btnExtraFloorHalf" onclick="setExtraFloorPricing('half')" class="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-[10px] font-bold transition-all hover:bg-slate-200">1/2 giá gốc</button>
-                    </div>
-                </div>
-
-                <!-- Custom Price input (only shows if custom selected) -->
-                <div id="customPriceContainer" class="hidden">
-                    <label class="block text-slate-500 mb-1">Đơn Giá Thỏa Thuận Riêng (đ):</label>
-                    <input type="number" id="customPriceVal" value="3500000" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold" oninput="updatePreview()">
-                </div>
-
-                <!-- Partner discounts toggle (Only relevant for B2B) -->
-                <div id="discountConfigContainer" class="hidden">
-                    <label class="block text-slate-500 mb-2">Chính Sách Đối Tác (B2B):</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 font-medium text-slate-600">
-                            <input type="radio" name="discountOption" value="0" checked class="accent-orange-500" onchange="updatePreview()">
-                            <span>Không chiết khấu</span>
-                        </label>
-                        <label class="flex items-center gap-2 font-medium text-slate-600">
-                            <input type="radio" name="discountOption" value="10" class="accent-orange-500" onchange="updatePreview()">
-                            <span>Giảm 10% (Đối tác Thân thiết)</span>
-                        </label>
-                        <label class="flex items-center gap-2 font-medium text-slate-600">
-                            <input type="radio" name="discountOption" value="15" class="accent-orange-500" onchange="updatePreview()">
-                            <span>Giảm 15% (Đối tác Chiến lược)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Geography surcharges -->
-                <div>
-                    <label class="block text-slate-500 mb-2">Phạm Vi Địa Lý / Phí Di Chuyển:</label>
-                    <select id="transportFee" class="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold text-slate-900" onchange="updatePreview()">
-                        <option value="0">Nội thành TP.HCM (Miễn phí)</option>
-                        <option value="150000">Ngoại thành TP.HCM (+150.000 đ)</option>
-                        <option value="300000">Tỉnh lân cận (+300.000 đ)</option>
-                    </select>
-                </div>
-
-                <!-- Quick Export Word on Sidebar -->
-                <div class="pt-4 border-t border-slate-100">
-                    <button onclick="exportToWord()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-all shadow-md flex justify-center items-center gap-2">
-                        <span>💾</span> Tải Xuất Bản Word (.docx)
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Right Column: Interactive Letterhead Preview -->
-        <section class="flex-1 p-2 md:p-6 overflow-y-auto flex justify-center items-start">
+        <!-- Tab 2: Full-width Interactive Document Preview -->
+        <div id="panelPreview" class="hidden p-0 md:p-4 w-full max-w-4xl mx-auto flex-1 flex justify-center items-start">
             
-            <!-- Document A4 Container (Styled strictly as Times New Roman) -->
-            <div class="a4-page border border-slate-200 transition-all rounded-none" id="quotationPage">
+            <!-- Document A4 Container (Full Width inside Power Apps container) -->
+            <div class="a4-page border-0 md:border md:border-slate-200 transition-all rounded-none" id="quotationPage">
                 
-                <!-- Main body wrap: holds all headers, table and terms spaced comfortably -->
                 <div class="space-y-4">
                     <!-- Corporate Letterhead -->
-                    <div class="flex justify-between items-start border-b-4 border-slate-900 pb-2 mb-1 flex-wrap md:flex-nowrap gap-4">
+                    <div class="flex justify-between items-start border-b-4 border-slate-900 pb-2 mb-1 flex-wrap sm:flex-nowrap gap-4">
                         <div class="flex items-center gap-4">
-                            <!-- Corrected Brand Logo using verified direct image URL -->
                             <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-16 w-auto object-contain max-w-[140px]" alt="Kiến Thợ Logo" />
                             <div>
                                 <h2 contenteditable="true" class="text-[14px] font-black tracking-wider text-slate-900 uppercase leading-none">Dịch vụ công nghệ kiến thợ</h2>
@@ -277,7 +280,7 @@
                                 <p class="text-[10px] text-slate-400">Website: <span contenteditable="true">kienthotech.wordpress.com</span></p>
                             </div>
                         </div>
-                        <div class="text-left md:text-right text-[10px] text-slate-500 font-medium space-y-1 shrink-0">
+                        <div class="text-left sm:text-right text-[10px] text-slate-500 font-medium space-y-1 shrink-0">
                             <p class="text-[12px] font-black text-slate-900">BÁO GIÁ DỊCH VỤ</p>
                             <p>Số: <span contenteditable="true" class="font-bold text-slate-800" id="lblQtNumber">KTT-2026-0701</span></p>
                             <p>Ngày lập: <span contenteditable="true" class="font-bold text-slate-800" id="lblQtDate">01/07/2026</span></p>
@@ -292,12 +295,12 @@
                     <!-- Client Info Segment -->
                     <div class="bg-slate-50 py-3 px-4 rounded-lg border border-slate-200 text-[13px] space-y-1">
                         <div class="grid grid-cols-12 gap-1">
-                            <span class="col-span-12 md:col-span-3 text-slate-500 font-bold">Kính gửi Quý khách:</span>
-                            <span contenteditable="true" class="col-span-12 md:col-span-9 font-black text-slate-900" id="lblClientName">Anh Phú - Thầu Cải Tạo Tân Phú</span>
+                            <span class="col-span-12 sm:col-span-3 text-slate-500 font-bold">Kính gửi Quý khách:</span>
+                            <span contenteditable="true" class="col-span-12 sm:col-span-9 font-black text-slate-900" id="lblClientName">Anh Phú - Thầu Cải Tạo Tân Phú</span>
                         </div>
                         <div class="grid grid-cols-12 gap-1">
-                            <span class="col-span-12 md:col-span-3 text-slate-500 font-bold">Địa chỉ công trình:</span>
-                            <span contenteditable="true" class="col-span-12 md:col-span-9 font-semibold text-slate-800" id="lblClientAddr">158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM</span>
+                            <span class="col-span-12 sm:col-span-3 text-slate-500 font-bold">Địa chỉ công trình:</span>
+                            <span contenteditable="true" class="col-span-12 sm:col-span-9 font-semibold text-slate-800" id="lblClientAddr">158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM</span>
                         </div>
                     </div>
 
@@ -316,7 +319,7 @@
                             <tbody id="quotationTableBody" class="divide-y divide-slate-150 text-slate-700">
                                 <!-- Row 1: Base Floor pricing -->
                                 <tr>
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs md:max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs sm:max-w-sm">
                                         Dò quét định vị mạch điện ngầm, dây điện âm tường và dán băng keo đánh dấu trực tiếp tại hiện trường.
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableArea">Từ 50 m² – dưới 80 m²</td>
@@ -326,7 +329,7 @@
                                 </tr>
                                 <!-- Row 2: Dynamic Extra floors calculation -->
                                 <tr id="extraFloorsRow" class="hidden">
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs md:max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs sm:max-w-sm">
                                         Phí dịch vụ rà quét cộng thêm cho các tầng phụ (Tầng lầu/tầng lửng).
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableExtraFloors">Thêm 1 tầng</td>
@@ -340,7 +343,7 @@
 
                     <!-- Financial Calculation Summary block -->
                     <div class="pt-1 flex flex-col items-end">
-                        <div class="w-full md:w-68 space-y-1.5 text-[11.5px] border-t border-slate-200 pt-2">
+                        <div class="w-full sm:w-72 space-y-1.5 text-[11.5px] border-t border-slate-200 pt-2">
                             <div class="flex justify-between text-slate-500 font-bold">
                                 <span>Phí dịch vụ:</span>
                                 <span contenteditable="true" id="lblSumSub" class="text-slate-900">1.600.000 đ</span>
@@ -397,7 +400,7 @@
                         <h4 contenteditable="true" class="font-extrabold text-slate-950 text-[12px] uppercase border-b border-slate-200 pb-1 flex items-center gap-1.5 tracking-wider">
                             <span class="text-orange-500" id="lblTermsSectionNum">III.</span> ĐIỀU KHOẢN VÀ CAM KẾT ÁP DỤNG
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px] text-slate-500 leading-relaxed pl-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px] text-slate-500 leading-relaxed pl-1">
                             <p contenteditable="true">• <strong>Phạm vi dịch vụ:</strong> Bảng giá trên chỉ áp dụng cho rà quét dây điện đi trên vách tường đứng; không bao gồm các hạng mục dò quét ngầm dưới sàn nhà (nền), hệ trần bê tông hoặc dầm cầu thang.</p>
                             <p contenteditable="true">• <strong>Cam kết an toàn:</strong> Hoàn tiền 100% chi phí dịch vụ nếu kết quả rà quét không chính xác dẫn đến sự cố va chạm hệ thống ngầm (trong phạm vi vùng đã quét và đánh dấu).</p>
                             <p contenteditable="true">• <strong>Thời gian đặt lịch:</strong> Quý khách vui lòng liên hệ đặt lịch trước ít nhất 01 ngày để chúng tôi sắp xếp kỹ sư và thiết bị phục vụ chu đáo nhất.</p>
@@ -406,7 +409,7 @@
                     </div>
                 </div>
 
-                <!-- Footer Signatures (Set to h-32 [128px] with proper layout safeguards for full A4 filling) -->
+                <!-- Footer Signatures -->
                 <div class="grid grid-cols-2 text-center text-[12px] mt-4 pt-4 border-t border-slate-200 gap-4">
                     <div class="flex flex-col justify-between h-32">
                         <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[12px]">ĐẠI DIỆN KHÁCH HÀNG</p>
@@ -421,7 +424,7 @@
                 </div>
 
             </div>
-        </section>
+        </div>
 
     </div>
 
@@ -439,6 +442,31 @@
             return `${day}/${month}/${year}`;
         }
 
+        // TAB SWITCHER FOR POWER APPS COMPATIBILITY
+        function switchTab(tabName) {
+            const panelConfig = document.getElementById('panelConfig');
+            const panelPreview = document.getElementById('panelPreview');
+            const tabBtnConfig = document.getElementById('tabBtnConfig');
+            const tabBtnPreview = document.getElementById('tabBtnPreview');
+
+            if (tabName === 'config') {
+                panelConfig.classList.remove('hidden');
+                panelPreview.classList.add('hidden');
+                
+                tabBtnConfig.className = "flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-white bg-slate-700 shadow-sm border border-slate-600";
+                tabBtnPreview.className = "flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-slate-400 hover:text-white hover:bg-slate-700";
+            } else {
+                panelConfig.classList.add('hidden');
+                panelPreview.classList.remove('hidden');
+
+                tabBtnConfig.className = "flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-slate-400 hover:text-white hover:bg-slate-700";
+                tabBtnPreview.className = "flex-1 py-2 text-center text-xs font-bold rounded-md transition-all text-white bg-slate-700 shadow-sm border border-slate-600";
+                
+                // Trigger preview render recalculations when switched
+                updatePreview();
+            }
+        }
+
         function setMode(mode) {
             currentMode = mode;
             
@@ -449,8 +477,8 @@
             const lblTermsSectionNum = document.getElementById('lblTermsSectionNum');
 
             if (mode === 'B2C') {
-                btnB2C.className = "px-3 py-2 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
-                btnB2B.className = "px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
+                btnB2C.className = "px-3 py-2.5 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
+                btnB2B.className = "px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
                 discountConfigContainer.classList.add('hidden');
                 
                 const discountRadios = document.getElementsByName('discountOption');
@@ -459,14 +487,14 @@
                 }
 
                 previewB2BSection.classList.add('hidden');
-                lblTermsSectionNum.textContent = "II."; // Under B2C, Appendix shrink-renumbering: I, then II (Terms)
+                lblTermsSectionNum.textContent = "II."; 
             } else {
-                btnB2C.className = "px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
-                btnB2B.className = "px-3 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
+                btnB2C.className = "px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
+                btnB2B.className = "px-3 py-2.5 bg-slate-900 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
                 discountConfigContainer.classList.remove('hidden');
 
                 previewB2BSection.classList.remove('hidden');
-                lblTermsSectionNum.textContent = "III."; // Under B2B, Appendix numbers are I, II (B2B), III (Terms)
+                lblTermsSectionNum.textContent = "III."; 
             }
 
             updatePreview();
@@ -478,11 +506,11 @@
             const btnHalf = document.getElementById('btnExtraFloorHalf');
 
             if (rule === 'fixed') {
-                btnFixed.className = "px-3 py-2 bg-orange-500 text-white rounded-lg text-[10px] font-bold transition-all shadow-sm";
-                btnHalf.className = "px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-[10px] font-bold transition-all hover:bg-slate-200";
+                btnFixed.className = "px-3 py-2.5 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
+                btnHalf.className = "px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
             } else {
-                btnFixed.className = "px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-[10px] font-bold transition-all hover:bg-slate-200";
-                btnHalf.className = "px-3 py-2 bg-orange-500 text-white rounded-lg text-[10px] font-bold transition-all shadow-sm";
+                btnFixed.className = "px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-all hover:bg-slate-200";
+                btnHalf.className = "px-3 py-2.5 bg-orange-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm";
             }
 
             updatePreview();
@@ -530,7 +558,7 @@
             
             let ratePerFloor = 0;
             if (extraFloorPricingRule === 'half') {
-                ratePerFloor = basePrice / 2; // Exact 1/2 of base price as requested
+                ratePerFloor = basePrice / 2; 
             } else {
                 ratePerFloor = (currentMode === 'B2B') ? 600000 : 900000;
             }
@@ -561,7 +589,6 @@
             
             const discountRow = document.getElementById('discountRow');
             if (discountPercent > 0) {
-                discountRow.classList.remove('text-slate-400');
                 document.getElementById('lblSumDiscount').textContent = `-${formatVND(discountAmount)} đ (${discountPercent}%)`;
                 discountRow.style.display = 'flex';
             } else {
@@ -576,12 +603,8 @@
             document.getElementById('lblSumTotal').textContent = formatVND(grandTotal) + " đ";
         }
 
-        /* Robust Client-side Word (.docx) Exporter 
-           Strictly configures the export to open as A4 portrait, 
-           utilizing ONLY Times New Roman font, native LOGO image bindings, updated Signature layout and renumbered appendices.
-        */
+        /* Client-side Word (.docx) Exporter */
         function exportToWord() {
-            // Retrieve latest bound and edited values from browser screen
             const qtNum = document.getElementById('lblQtNumber').textContent.trim() || 'KTT-2026-0701';
             const clientName = document.getElementById('lblClientName').textContent.trim();
             const clientAddr = document.getElementById('lblClientAddr').textContent.trim();
@@ -598,7 +621,6 @@
 
             const isB2B = (currentMode === 'B2B');
             
-            // Generate extra floors row if count > 0 in table
             const extraFloorsCount = parseInt(document.getElementById('extraFloors').value);
             let extraRowHtml = "";
             if (extraFloorsCount > 0) {
@@ -616,7 +638,6 @@
                 `;
             }
 
-            // Times New Roman A4 Vertical Styling (MS Word standard)
             const wordHtml = `
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
                 <head>
@@ -633,12 +654,12 @@
                     <![endif]-->
                     <style>
                         @page {
-                            size: 21.0cm 29.7cm; /* Strict A4 Vertical dimensions */
-                            margin: 1.5cm 1.5cm 1.5cm 1.5cm; /* Elegant padding */
+                            size: 21.0cm 29.7cm;
+                            margin: 1.5cm 1.5cm 1.5cm 1.5cm;
                             mso-page-orientation: portrait;
                         }
                         @page Section1 {
-                            size: 21.0cm 29.7cm; /* A4 vertical page size */
+                            size: 21.0cm 29.7cm;
                             margin: 1.5cm 1.5cm 1.5cm 1.5cm;
                             mso-page-orientation: portrait;
                             mso-header-margin: 30.0pt;
@@ -653,9 +674,6 @@
                             font-size: 11pt;
                             line-height: 1.45;
                             color: #1e293b;
-                        }
-                        p, li, td, th, span {
-                            font-family: 'Times New Roman', Times, serif !important;
                         }
                         table {
                             width: 100%;
@@ -698,7 +716,6 @@
                 </head>
                 <body>
                     <div class="Section1">
-                        <!-- Fully restored Header using actual working logo image link -->
                         <table class="header-table" style="width: 100%; margin-bottom: 15px;">
                             <tr>
                                 <td style="width: 110pt; padding: 0px; vertical-align: middle;">
@@ -720,10 +737,8 @@
 
                         <div style="border-top: 3px solid #1e293b; margin-top: -12px; margin-bottom: 18px;"></div>
 
-                        <!-- Main Quote Title -->
                         <p style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; color: #1e293b; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.5px;">BẢNG BÁO GIÁ DỊCH VỤ DÒ TÌM ĐIỆN ÂM TƯỜNG</p>
 
-                        <!-- Customer Record -->
                         <table class="client-table" style="width: 100%; margin-bottom: 18px; border: 1px solid #cbd5e1;">
                             <tr>
                                 <td style="font-family: 'Times New Roman', Times, serif;">
@@ -733,7 +748,6 @@
                             </tr>
                         </table>
 
-                        <!-- Quotation Grid -->
                         <table style="width: 100%; margin-bottom: 14px;">
                             <thead>
                                 <tr>
@@ -756,7 +770,6 @@
                             </tbody>
                         </table>
 
-                        <!-- Calculations Block -->
                         <table class="summary-table" style="width: 100%; margin-bottom: 14px;">
                             <tr>
                                 <td style="width: 55%; border: none;"></td>
@@ -777,12 +790,10 @@
                             </tr>
                         </table>
 
-                        <!-- Guaranteed No-charge slogan -->
                         <p style="text-align: center; font-family: 'Times New Roman', Times, serif; font-weight: bold; color: #ea580c; font-style: italic; margin: 12px 0; font-size: 11.5pt; border-top: 1px dashed #cbd5e1; border-bottom: 1px dashed #cbd5e1; padding: 8px 0;">
                             "KHÔNG PHÁT HIỆN ĐƯỢC – KHÔNG THU PHÍ (An tâm tuyệt đối)"
                         </p>
 
-                        <!-- Deliverables standard (Renumbered to I) -->
                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 10.5pt; font-weight: bold; color: #1e293b; margin-top: 15px; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; text-transform: uppercase;">
                             I. SẢN PHẨM KHÁCH HÀNG NHẬN ĐƯỢC (DELIVERABLES)
                         </p>
@@ -792,7 +803,6 @@
                             <li style="margin-bottom: 4px;"><b>Tư vấn kỹ thuật tại trận:</b> Cảnh báo các vùng "tử huyệt" nguy hiểm cấm khoan, đề xuất các vị trí an toàn cho thợ đóng vít cố định.</li>
                         </ul>
 
-                        <!-- B2B Strategic details -->
                         ${isB2B ? `
                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 10.5pt; font-weight: bold; color: #1e293b; margin-top: 14px; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; text-transform: uppercase;">
                             II. CHÍNH SÁCH ƯU ĐÃI DÀNH CHO ĐỐI TÁC (B2B)
@@ -802,7 +812,6 @@
                         </p>
                         ` : ''}
 
-                        <!-- Terms of engagement (Renumbered to III or II dynamically) -->
                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 10.5pt; font-weight: bold; color: #1e293b; margin-top: 14px; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; text-transform: uppercase;">
                             ${isB2B ? 'III.' : 'II.'} ĐIỀU KHOẢN VÀ CAM KẾT ÁP DỤNG
                         </p>
@@ -819,7 +828,6 @@
                             </tr>
                         </table>
 
-                        <!-- Double columns signature zones matching spacing standard of h-32 on Word -->
                         <table style="width: 100%; margin-top: 25px; border: none !important;">
                             <tr style="border: none !important;">
                                 <td align="center" style="width: 50%; border: none !important; text-align: center; padding: 0; font-family: 'Times New Roman', Times, serif;">
