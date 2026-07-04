@@ -1,9 +1,9 @@
 <!-- Chosen Palette: Slate (#1e293b) for premium technical corporate branding, combined with Vibrant Orange (#f97316) for modern energetic accents. Background is pristine white for high-fidelity PDF printing. -->
 <!-- Application Structure Plan:
      A professional single-file corporate quotation generator.
-     1. Layout: Two-column split on desktop (Left: Real-time Configurator / Right: Live Letterhead PDF-ready quotation page).
+     1. Layout: Fluid width on screen (fully responsive for Power Apps & mobile screens), strict standard dimension on print.
      2. Configurator panel (no-print): Controls for Client Info, Date, Customer Mode (B2B vs B2C), Area range selection, Extra floors, Extra floor price option (Fixed vs 1/2 Base), B2B partner discount toggle (10% or 15%), and Geographical surcharge.
-     3. Printable Paper area (print-area): Formatted precisely like a standard A4 sheet with strict CSS margins.
+     3. Printable Paper area (print-area): Formatted fluidly for responsive screen view and strict 210mm x 297mm on A4 print.
      4. CSS print optimization: Uses `@media print` to hide configuration inputs, change body backgrounds to pure white, and expand the preview card to full screen with exact color preservation. Force fits precisely onto 1 sheet of A4.
      5. Word Online Experience: Every single paragraph, header, list item, and block is editable directly on click with contenteditable. Hover cues are styled dynamically.
      6. Client-side Word Export: Generates a beautifully formatted Word Document (.docx) strictly using Times New Roman, vertical A4 configuration, and robust table layout with pure CSS logo fallbacks.
@@ -20,20 +20,24 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Specific Styles for Letterhead A4 Paper look with optimized margins to prevent page spill */
+        
+        /* POWER APPS FLUID RESPONSIVE STYLE:
+           Make the page container take 100% width of Power Apps screen on web display,
+           and only apply strict A4 sizes during printing. */
         .a4-page {
-            width: 210mm;
-            height: 297mm; /* Standard A4 height */
-            padding: 16mm 16mm; /* Balanced premium margins to fill the page beautifully */
+            width: 100%; /* Fully stretch to fill Power Apps width */
+            max-width: 800px; /* Clean desktop viewing threshold */
+            min-height: 1050px; /* Standard proportional height on screen */
+            height: auto;
+            padding: 5% 5%; /* Fluid relative padding */
             background: white;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             margin: auto;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Guarantees signature is pushed perfectly to bottom */
+            justify-content: space-between; /* Keeps signature at the absolute bottom */
             box-sizing: border-box;
-            /* Uniform Times New Roman for the printable corporate document */
             font-family: 'Times New Roman', Times, serif !important;
         }
 
@@ -70,10 +74,11 @@
             }
             .a4-page {
                 box-shadow: none !important;
-                width: 100% !important;
-                height: 100% !important;
-                min-height: 100% !important;
-                padding: 0 !important; /* Managed purely via print page margins to avoid cut-off */
+                width: 210mm !important; /* Force true A4 Width on print */
+                height: 297mm !important; /* Force true A4 Height on print */
+                max-width: 210mm !important;
+                min-height: 297mm !important;
+                padding: 12mm 15mm 12mm 15mm !important; /* Premium printing margins */
                 margin: 0 !important;
                 page-break-after: avoid;
                 page-break-before: avoid;
@@ -85,9 +90,9 @@
             }
             @page {
                 size: A4 portrait;
-                margin: 12mm 15mm 12mm 15mm; /* Safe mechanical printing zone borders to prevent overflow */
+                margin: 0; /* Direct margin control in container to prevent page spill */
             }
-            /* Hide the editable borders and background highlights when printing */
+            /* Hide the editable borders and highlights when printing */
             [contenteditable="true"] {
                 background-color: transparent !important;
                 box-shadow: none !important;
@@ -105,7 +110,7 @@
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
     <!-- Top Navigation Header (no-print) -->
-    <header class="bg-slate-900 text-white p-4 shadow-md no-print flex justify-between items-center z-10">
+    <header class="bg-slate-900 text-white p-4 shadow-md no-print flex justify-between items-center z-10 flex-wrap gap-2">
         <div class="flex items-center gap-3">
             <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-10 w-auto object-contain" alt="Kiến Thợ Logo" />
             <div>
@@ -251,21 +256,15 @@
         </aside>
 
         <!-- Right Column: Interactive Letterhead Preview -->
-        <section class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <section class="flex-1 p-2 md:p-6 overflow-y-auto flex justify-center items-start">
             
-            <!-- Dynamic Edit Mode Banner helper (no-print) -->
-            <div class="max-w-[210mm] mx-auto mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl flex items-center gap-2 shadow-sm no-print">
-                <span class="text-base">💡</span>
-                <span><strong>Chế độ Soạn thảo Word Online đang bật:</strong> Bạn có thể nhấp chuột trực tiếp vào bất kỳ đoạn chữ nào trên trang báo giá bên dưới để sửa nhanh nội dung trước khi in/xuất Word!</span>
-            </div>
-
             <!-- Document A4 Container (Styled strictly as Times New Roman) -->
             <div class="a4-page border border-slate-200 transition-all rounded-none" id="quotationPage">
                 
                 <!-- Main body wrap: holds all headers, table and terms spaced comfortably -->
                 <div class="space-y-4">
                     <!-- Corporate Letterhead -->
-                    <div class="flex justify-between items-start border-b-4 border-slate-900 pb-2 mb-1">
+                    <div class="flex justify-between items-start border-b-4 border-slate-900 pb-2 mb-1 flex-wrap md:flex-nowrap gap-4">
                         <div class="flex items-center gap-4">
                             <!-- Corrected Brand Logo using verified direct image URL -->
                             <img src="https://i.ibb.co/35sKPbtL/LOGO-NO.png" class="h-16 w-auto object-contain max-w-[140px]" alt="Kiến Thợ Logo" />
@@ -278,7 +277,7 @@
                                 <p class="text-[10px] text-slate-400">Website: <span contenteditable="true">kienthotech.wordpress.com</span></p>
                             </div>
                         </div>
-                        <div class="text-right text-[10px] text-slate-500 font-medium space-y-1">
+                        <div class="text-left md:text-right text-[10px] text-slate-500 font-medium space-y-1 shrink-0">
                             <p class="text-[12px] font-black text-slate-900">BÁO GIÁ DỊCH VỤ</p>
                             <p>Số: <span contenteditable="true" class="font-bold text-slate-800" id="lblQtNumber">KTT-2026-0701</span></p>
                             <p>Ngày lập: <span contenteditable="true" class="font-bold text-slate-800" id="lblQtDate">01/07/2026</span></p>
@@ -293,18 +292,18 @@
                     <!-- Client Info Segment -->
                     <div class="bg-slate-50 py-3 px-4 rounded-lg border border-slate-200 text-[13px] space-y-1">
                         <div class="grid grid-cols-12 gap-1">
-                            <span class="col-span-3 text-slate-500 font-bold">Kính gửi Quý khách:</span>
-                            <span contenteditable="true" class="col-span-9 font-black text-slate-900" id="lblClientName">Anh Phú - Thầu Cải Tạo Tân Phú</span>
+                            <span class="col-span-12 md:col-span-3 text-slate-500 font-bold">Kính gửi Quý khách:</span>
+                            <span contenteditable="true" class="col-span-12 md:col-span-9 font-black text-slate-900" id="lblClientName">Anh Phú - Thầu Cải Tạo Tân Phú</span>
                         </div>
                         <div class="grid grid-cols-12 gap-1">
-                            <span class="col-span-3 text-slate-500 font-bold">Địa chỉ công trình:</span>
-                            <span contenteditable="true" class="col-span-9 font-semibold text-slate-800" id="lblClientAddr">158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM</span>
+                            <span class="col-span-12 md:col-span-3 text-slate-500 font-bold">Địa chỉ công trình:</span>
+                            <span contenteditable="true" class="col-span-12 md:col-span-9 font-semibold text-slate-800" id="lblClientAddr">158/24 Lũy Bán Bích, P. Phú Thọ Hòa, Q. Tân Phú, TP.HCM</span>
                         </div>
                     </div>
 
                     <!-- Main Quotation Grid -->
-                    <div>
-                        <table class="w-full text-left text-[12.5px] border-collapse">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-[12.5px] border-collapse min-w-[500px]">
                             <thead>
                                 <tr class="border-b-2 border-slate-950 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
                                     <th class="py-2 pb-2">Hạng mục khảo sát tầm soát</th>
@@ -317,7 +316,7 @@
                             <tbody id="quotationTableBody" class="divide-y divide-slate-150 text-slate-700">
                                 <!-- Row 1: Base Floor pricing -->
                                 <tr>
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs md:max-w-sm">
                                         Dò quét định vị mạch điện ngầm, dây điện âm tường và dán băng keo đánh dấu trực tiếp tại hiện trường.
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableArea">Từ 50 m² – dưới 80 m²</td>
@@ -327,7 +326,7 @@
                                 </tr>
                                 <!-- Row 2: Dynamic Extra floors calculation -->
                                 <tr id="extraFloorsRow" class="hidden">
-                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-sm">
+                                    <td contenteditable="true" class="py-2.5 font-bold text-slate-900 leading-relaxed max-w-xs md:max-w-sm">
                                         Phí dịch vụ rà quét cộng thêm cho các tầng phụ (Tầng lầu/tầng lửng).
                                     </td>
                                     <td contenteditable="true" class="py-2.5" id="lblTableExtraFloors">Thêm 1 tầng</td>
@@ -341,7 +340,7 @@
 
                     <!-- Financial Calculation Summary block -->
                     <div class="pt-1 flex flex-col items-end">
-                        <div class="w-68 space-y-1.5 text-[11.5px] border-t border-slate-200 pt-2">
+                        <div class="w-full md:w-68 space-y-1.5 text-[11.5px] border-t border-slate-200 pt-2">
                             <div class="flex justify-between text-slate-500 font-bold">
                                 <span>Phí dịch vụ:</span>
                                 <span contenteditable="true" id="lblSumSub" class="text-slate-900">1.600.000 đ</span>
@@ -408,7 +407,7 @@
                 </div>
 
                 <!-- Footer Signatures (Set to h-32 [128px] with proper layout safeguards for full A4 filling) -->
-                <div class="grid grid-cols-2 text-center text-[12px] mt-4 pt-4 border-t border-slate-200">
+                <div class="grid grid-cols-2 text-center text-[12px] mt-4 pt-4 border-t border-slate-200 gap-4">
                     <div class="flex flex-col justify-between h-32">
                         <p contenteditable="true" class="font-black text-slate-950 uppercase tracking-wider text-[12px]">ĐẠI DIỆN KHÁCH HÀNG</p>
                         <div class="flex-1"></div>
