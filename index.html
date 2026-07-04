@@ -107,7 +107,7 @@
     <!-- Top Navigation Header (no-print) -->
     <header class="bg-slate-900 text-white p-4 shadow-md no-print flex justify-between items-center z-10">
         <div class="flex items-center gap-3">
-            <img src="LOGO.png" class="h-10 w-auto object-contain" onerror="this.src='LOGO-NO.png';" />
+            <img  src="https://ibb.co" alt="Logo Kien Tho" style="max-width: 200px; height: auto;" />
             <div>
                 <h1 class="text-md font-black tracking-wider text-orange-500 uppercase">DỊCH VỤ CÔNG NGHỆ KIẾN THỢ</h1>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest">Trình tạo báo giá nhanh dã ngoại</p>
@@ -430,6 +430,54 @@
     </div>
 
     <script>
+         // 1. Hàm kiểm tra thiết bị tự động
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// 2. Xử lý chức năng XUẤT PDF / IN BÁO GIÁ
+function xuatPDF() {
+    if (isMobileDevice()) {
+        // TRÊN ĐIỆN THOẠI: Mở lệnh in gốc của hệ điều hành (iOS/Android hỗ trợ lưu thẳng thành file PDF)
+        window.print();
+    } else {
+        // TRÊN MÁY TÍNH: Mở trang báo giá ở một tab mới độc lập để kích hoạt chế độ in toàn trang đẹp mắt, không bị lỗi iFrame
+        var printWindow = window.open(window.location.href, '_blank');
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
+}
+
+// 3. Xử lý chức năng TẢI FILE WORD (.DOCX)
+function taiWord() {
+    // Lấy toàn bộ nội dung của vùng cần xuất báo giá (thay 'vung-bao-gia' bằng ID vùng HTML của bạn)
+    var nội_dung_html = document.getElementById('vung-bao-gia').innerHTML;
+    
+    // Tạo cấu trúc chuẩn của file Word kèm mã hóa UTF-8 tiếng Việt
+    var file_source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://w3.org">' +
+        '<head><title>Báo giá Kiến Thợ</title><style>body { font-family: Arial; }</style></head>' +
+        '<body>' + nội_dung_html + '</body></html>'
+    );
+    
+    // Tự động kích hoạt tải xuống file .doc cho cả Điện thoại và Máy tính
+    var downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
+    downloadLink.href = file_source;
+    downloadLink.download = 'Bao_Gia_Kien_Tho.doc';
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+// 4. Tự động xử lý giao diện ẩn thanh cuộn iFrame khi tải trang
+window.onload = function() {
+    // Thêm CSS ẩn thanh cuộn dư thừa để giao diện trong Power Apps mượt mà hơn
+    var style = document.createElement('style');
+    style.innerHTML = 'html, body { overflow-x: hidden; margin: 0; padding: 0; }';
+    document.head.appendChild(style);
+};
+
         let currentMode = 'B2C'; // Default customer segment
         let extraFloorPricingRule = 'fixed'; // Default option for extra floor rate
 
